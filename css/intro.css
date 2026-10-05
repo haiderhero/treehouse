@@ -1,0 +1,163 @@
+/* ============================================================
+   Tree House — انترو «من قلب الشجرة»
+   المشهد يترسم بـ WebGL (js/intro.js)، وهنا بس الطبقات فوقه
+   ============================================================ */
+:root{
+  --terra:#b3543f;
+  --terra-deep:#8f3d2e;
+  --terra-night:#5e2419;
+  --cream:#f1e6d2;
+  --gold:#e7c9a6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Tajawal',sans-serif;background:var(--terra-night);overflow:hidden;
+  -webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body.leaving{opacity:0;transition:opacity .55s ease}
+
+.stage{position:fixed;inset:0;overflow:hidden;background:var(--terra)}
+/* وقت التحميل: البذرة (نقطة ضوء) تنبض بنص الشاشة — نفس مكان قلب الحلقات أول ما يبدي الانترو */
+.stage::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;
+  z-index:2;pointer-events:none;background:radial-gradient(circle,#fff3d6 0%,rgba(255,204,133,.85) 35%,rgba(255,170,90,0) 70%);
+  box-shadow:0 0 34px 12px rgba(255,190,110,.35);animation:seedPulse 1.6s ease-in-out infinite;transition:opacity .35s ease}
+.stage.ready::after{opacity:0;animation:none}
+@keyframes seedPulse{0%,100%{transform:scale(.8);opacity:.55}50%{transform:scale(1.15);opacity:1}}
+.scene{position:absolute;inset:0;transform-origin:50% 42%}
+.scene.idle{animation:kb 28s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.045)}}
+.gl,.burst{position:absolute;inset:0;width:100%;height:100%;display:block}
+.burst{z-index:4;pointer-events:none}
+.fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.no-gl .fallback{display:block}
+
+/* الشعار على اللوحة: JS يحط transform كل إطار حتى يلزم مكانه باللوحة */
+.plaque-logo{position:absolute;left:0;top:0;z-index:3;color:var(--cream);
+  transform-origin:0 0;will-change:transform,opacity;opacity:0;pointer-events:none}
+.plaque-logo svg{display:block;width:100%;height:auto}
+.plaque-logo .la{will-change:opacity}
+.plaque-logo .s-base{position:relative;will-change:opacity}
+/* ظل ناعم ورا الشعار وهو طافي فوق الحلقات (حتى ينقرا) */
+.s-shade{position:absolute;inset:-70% -30%;opacity:0;will-change:opacity;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(24,7,4,.9),rgba(24,7,4,.62) 50%,rgba(24,7,4,.25) 75%,transparent 100%)}
+/* اللافتة مضوية: نفس الشعار بلون أبيض دافي وتوهّج (القيم بمقياس العنصر الأصلي ~1700px، ينصغر ×0.15–0.2) */
+.s-lit{position:absolute;inset:0;opacity:0;will-change:opacity}
+
+/* ---- الواجهة بعد الانترو ---- */
+.hero{position:absolute;left:50%;bottom:clamp(6%,9vh,11%);transform:translateX(-50%);z-index:6;
+  width:min(560px,90%);display:flex;flex-direction:column;align-items:center;text-align:center;pointer-events:none}
+.hero.on{pointer-events:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.hero .hero-tag,.hero .hero-rule,.hero .hero-status,.hero .enter{opacity:.002}
+
+/* ١ «مكانكم الثالث»: تنكتب من اليمين لليسار */
+.hero-tag{position:relative;font-family:'Aref Ruqaa',serif;font-weight:700;color:#fff2de;line-height:1.25;
+  font-size:clamp(2.35rem,8.2vw,3.3rem);text-shadow:0 0 18px rgba(255,190,120,.35),0 2px 3px rgba(40,10,4,.55),0 6px 26px rgba(0,0,0,.6)}
+.hero-tag .clip{display:inline-block;overflow:hidden;vertical-align:top;padding:.2em .2em .35em;margin:-.2em -.2em -.35em}
+.hero-tag .in{display:inline-block}
+.hero-tag .nib{position:absolute;left:0;top:58%;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;opacity:0;
+  background:radial-gradient(circle,#fff6e4,rgba(255,200,130,.9) 40%,rgba(255,170,90,0) 72%)}
+.hero.on .hero-tag{opacity:1}
+.hero.on .hero-tag .clip{animation:wClip 1.25s cubic-bezier(.33,0,.2,1) .05s both}
+.hero.on .hero-tag .in{animation:wIn 1.25s cubic-bezier(.33,0,.2,1) .05s both}
+.hero.on .hero-tag .nib{animation:wNib 1.25s cubic-bezier(.33,0,.2,1) .05s both}
+@keyframes wClip{from{transform:translateX(101%)}to{transform:none}}
+@keyframes wIn{from{transform:translateX(-101%)}to{transform:none}}
+@keyframes wNib{0%{transform:translateX(var(--tw,260px));opacity:0}12%{opacity:1}85%{opacity:1}100%{transform:none;opacity:0}}
+
+/* ٢ الفاصل: خطين يطلعون من الدائرة، والدائرة ترتسم حلقة حلقة */
+.hero-rule{display:flex;align-items:center;gap:.7rem;width:min(300px,76%);margin-top:.35rem}
+.hero-rule .ln{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(247,217,176,.85));transform:scaleX(0)}
+.hero-rule .ln:first-child{transform-origin:100% 50%}
+.hero-rule .ln:last-child{background:linear-gradient(270deg,transparent,rgba(247,217,176,.85));transform-origin:0 50%}
+.roundel{position:relative;width:30px;height:30px;flex:0 0 auto}
+.roundel svg{width:100%;height:100%;display:block;overflow:visible}
+.roundel circle{fill:none;stroke:#f7d9b0;stroke-width:1.2;stroke-dasharray:130;stroke-dashoffset:130;opacity:.95}
+.roundel circle.core{fill:#ffe6c0;stroke:none}
+.roundel .orbit{position:absolute;inset:-5px;opacity:0}
+.roundel .orbit b{position:absolute;left:50%;top:0;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;
+  background:#fff1d6;box-shadow:0 0 8px 2px rgba(255,200,130,.85)}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.hero.on .hero-rule{opacity:1}
+.hero.on .hero-rule .ln{animation:lnGrow .9s cubic-bezier(.16,1,.3,1) .75s both}
+.hero.on .roundel circle{animation:ring 1.1s cubic-bezier(.33,0,.2,1) both}
+.hero.on .roundel circle:nth-child(1){animation-delay:.95s}
+.hero.on .roundel circle:nth-child(2){animation-delay:.8s}
+.hero.on .roundel circle:nth-child(3){animation-delay:.65s}
+.hero.on .roundel circle:nth-child(4){animation-delay:.5s}
+.hero.on .roundel .orbit{animation:orbit 5.5s linear 1.6s infinite,fadeIn .6s ease 1.6s forwards}
+@keyframes lnGrow{to{transform:scaleX(1)}}
+@keyframes ring{to{stroke-dashoffset:0}}
+@keyframes fadeIn{to{opacity:1}}
+
+/* ٣ حالة الدوام */
+.hero-status{margin-top:.55rem;color:#f0dcc0;font-weight:400;letter-spacing:.03em;
+  font-size:clamp(.84rem,3.4vw,.95rem);text-shadow:0 1px 10px rgba(0,0,0,.8)}
+.hero-status b{font-weight:700;color:#fff}
+.hero-status .dot{position:relative;display:inline-block;width:7px;height:7px;border-radius:50%;margin-inline-end:.5rem;
+  background:#9be08a;vertical-align:middle;transform:translateY(-1px)}
+.hero-status .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid #9be08a;
+  animation:ping 2.2s cubic-bezier(.2,.6,.3,1) infinite}
+.hero-status.closed .dot{background:var(--gold)}
+.hero-status.closed .dot::after{border-color:var(--gold)}
+@keyframes ping{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+.hero.on .hero-status{animation:up .8s cubic-bezier(.16,1,.3,1) 1.05s both}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ٤ الزر */
+.enter{position:relative;margin-top:clamp(1.2rem,3vh,1.7rem);padding:0;border:0;background:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;font-family:'Tajawal',sans-serif}
+.e-body{position:relative;display:flex;align-items:center;justify-content:center;gap:.9rem;overflow:hidden;
+  height:60px;width:min(320px,82vw);padding:0 22px 0 18px;border-radius:99px;isolation:isolate;
+  background:linear-gradient(180deg,#a94a35 0%,#8a3726 55%,#6d2a1c 100%);
+  border:1px solid rgba(255,226,196,.5);
+  box-shadow:0 18px 40px -14px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,228,200,.35),inset 0 -8px 18px rgba(60,16,8,.35);
+  transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.e-rings{position:absolute;left:-40%;top:-60%;width:180%;height:220%;z-index:-1;opacity:0;
+  background:url("../assets/intro/btn_rings.webp") center/cover no-repeat;will-change:transform}
+@keyframes drift{from{transform:translateX(-8%)}to{transform:translateX(8%)}}
+.e-sheen{position:absolute;top:-20%;bottom:-20%;left:-40%;width:34%;z-index:0;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,236,210,.32) 50%,transparent);transform:translateX(-120%) skewX(-18deg);opacity:0}
+.e-label{position:relative;z-index:1;color:#fff4e4;font-weight:500;font-size:1.12rem;letter-spacing:.02em;
+  text-shadow:0 1px 2px rgba(60,16,8,.6)}
+.e-go{position:relative;z-index:1;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
+  background:#f6e6cf;box-shadow:0 2px 6px rgba(40,10,4,.45),inset 0 -2px 3px rgba(150,90,50,.25);
+  transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.e-go svg{width:18px;height:18px}
+.e-go path{fill:none;stroke:#8a3726;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.e-halo{position:absolute;inset:-14px -18px;border-radius:99px;pointer-events:none;opacity:0;
+  background:radial-gradient(60% 70% at 50% 55%,rgba(255,170,100,.45),rgba(255,150,80,0) 70%)}
+.hero.on .enter{animation:btnIn 1s cubic-bezier(.16,1,.3,1) 1.25s both}
+.hero.on .e-rings{animation:fadeRings 1.4s ease 1.7s forwards,drift 16s ease-in-out 1.7s infinite alternate}
+.hero.on .e-sheen{animation:sheen 5.2s cubic-bezier(.45,0,.2,1) 2.1s infinite}
+.hero.on .e-halo{animation:halo 3.6s ease-in-out 2.2s infinite}
+@keyframes btnIn{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes fadeRings{to{opacity:.2}}
+@keyframes sheen{0%{transform:translateX(-120%) skewX(-18deg);opacity:0}6%{opacity:1}30%{transform:translateX(420%) skewX(-18deg);opacity:1}31%,100%{opacity:0;transform:translateX(420%) skewX(-18deg)}}
+@keyframes halo{0%,100%{opacity:.25}50%{opacity:.8}}
+.enter:hover .e-body{transform:translateY(-2px)}
+.enter:hover .e-go{transform:translateX(-4px)}
+.enter:active .e-body{transform:scale(.97)}
+.enter:focus-visible{outline:none}
+.enter:focus-visible .e-body{outline:2px solid #fff;outline-offset:4px}
+/* الضغطة: حلقات تتوسع من الزر للبرّه (مثل حلقات الشجرة) */
+.ripple{position:absolute;left:50%;top:50%;z-index:-1;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;pointer-events:none;
+  border:1.5px solid rgba(255,226,196,.8);opacity:0;will-change:transform,opacity}
+
+/* الحاسوب: الكلام أصغر وأنزل حتى يقعد على الشجر تحت الشبابيك */
+@media (min-aspect-ratio:1/1){
+  .hero{bottom:clamp(3%,4.5vh,6%)}
+  .hero-tag{font-size:clamp(2rem,2.6vw,2.6rem)}
+  .enter{margin-top:clamp(.8rem,2vh,1.2rem)}
+  .e-body{height:54px;width:300px}
+}
+
+.skip{position:absolute;top:max(1rem,env(safe-area-inset-top));inset-inline-end:1rem;z-index:8;
+  font-family:'Tajawal',sans-serif;font-size:.85rem;color:rgba(241,230,210,.8);cursor:pointer;
+  background:rgba(40,14,9,.35);border:1px solid rgba(241,230,210,.25);border-radius:99px;
+  padding:.4rem 1rem;backdrop-filter:blur(4px);transition:opacity .4s ease}
+.skip.gone{opacity:0;pointer-events:none}
+
+/* ---- الدخول ---- */
+.hero.out{opacity:0;transition:opacity .5s ease .35s;pointer-events:none}
+/* انتقال ناعم للصفحة الجاية (Chrome/Edge/Safari الحديثة) */
+@view-transition{navigation:auto}

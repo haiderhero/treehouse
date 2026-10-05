@@ -1,0 +1,106 @@
+/* ============================================================
+   Tree House — المنيو «الغرفة»: كاميرا من فوق داخل تري هاوس
+   ثلاث طبقات بأعماق مختلفة (الأرض أبعد، فتتحرك أبطأ)
+   كل الحركة transform/opacity على كرت الشاشة
+   ============================================================ */
+:root{
+  --ink:#7a2c1e;          /* حبر على ورق الطاولة */
+  --ink-soft:#8d4b3b;
+  --terra:#b3543f;
+  --caramel:#f0c27a;
+  --cream:#f3e6d3;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Tajawal',sans-serif;background:#241810;color:var(--ink);overflow:hidden;
+  -webkit-font-smoothing:antialiased;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+@view-transition{navigation:auto}
+
+.room{position:fixed;inset:0;overflow:hidden;background:#241810}
+.layer{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0;will-change:transform}
+
+/* ---- الأرض (أبعد: مغبّشة وبالظل) ---- */
+.floor-img{position:absolute;left:0;top:0;display:block;transform-origin:0 0}
+.rug{position:absolute;left:0;top:0;transform:translate(-50%,-50%)}
+.rug img{display:block;width:100%;height:100%}
+
+/* ---- الطاولات والورق ---- */
+.tbl{position:absolute;left:0;top:0;pointer-events:none}
+.tbl img{display:block;width:100%;height:100%}
+.paper{position:absolute;left:0;top:0;pointer-events:none}
+.paper > img{display:block;width:100%;height:100%}
+.paper .lbl{position:absolute;text-align:right;direction:rtl}
+
+/* ---- الأطباق ---- */
+/* بلا will-change دائم: الطبقة تنحجز بكرت الشاشة بس وقت الحركة (ذاكرة التلفون محدودة) */
+.dish{position:absolute;left:0;top:0}
+.dish .sd{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(30,12,4,.6),rgba(30,12,4,.3) 60%,rgba(30,12,4,0) 100%)}
+.dish .fd{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ---- الكتابة ---- */
+.lbl{pointer-events:none}
+.layer > .lbl{position:absolute;left:0;top:0}
+.nm{position:relative;display:inline-block;line-height:1.2;white-space:nowrap}
+.nm .clip{display:inline-block;overflow:hidden;vertical-align:top;padding:.18em .12em .32em;margin:-.18em -.12em -.32em}
+.nm .in{display:inline-block;font-family:'Aref Ruqaa',serif;font-weight:700;color:var(--ink)}
+.nm .nib{position:absolute;left:0;top:55%;width:.24em;height:.24em;margin:-.12em 0 0 -.12em;border-radius:50%;opacity:0;
+  background:radial-gradient(circle,#fff3dc,rgba(255,196,120,.85) 45%,rgba(255,170,90,0) 72%)}
+.swash{display:block;overflow:visible;margin-left:auto}
+.swash path{fill:none;stroke:var(--terra);stroke-linecap:round;opacity:.85}
+.en{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;color:var(--ink-soft);
+  letter-spacing:.02em;opacity:0;direction:ltr;unicode-bidi:isolate;text-align:right}
+.ds{line-height:1.5;color:#6d4536;font-weight:500}
+.ds span{display:inline-block;opacity:0;white-space:pre}
+.pr{display:inline-block;font-weight:700;color:var(--terra);opacity:0}
+.note{display:inline-block;font-weight:500;color:var(--terra);opacity:0;border:.06em solid rgba(179,84,63,.5);border-radius:99em;padding:.05em .6em}
+/* على الخشب الغامق: كراميل */
+.lbl.wood .nm .in{color:var(--caramel);text-shadow:0 .03em 0 rgba(60,25,8,.7),0 0 .5em rgba(0,0,0,.35)}
+.lbl.wood .swash path{stroke:var(--caramel)}
+.lbl.wood .en{color:#e3c9a1;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.lbl.wood .ds{color:#f1e2cc;text-shadow:0 1px 8px rgba(0,0,0,.55)}
+.lbl.wood .note{color:var(--caramel);border-color:rgba(240,194,122,.55)}
+
+/* ---- ورق الشجر ---- */
+.leaf{position:absolute;left:0;top:0;pointer-events:none}
+.leaf img{display:block}
+.steam{position:absolute;left:0;top:0;pointer-events:none;border-radius:50%;opacity:0;
+  background:radial-gradient(closest-side,rgba(255,246,232,.42),rgba(255,246,232,0))}
+
+/* ---- عنوان الطاولة (ثابت بالشاشة) ---- */
+.ttl{position:fixed;left:50%;top:max(64px,calc(env(safe-area-inset-top) + 58px));transform:translateX(-50%);z-index:15;
+  text-align:center;pointer-events:none;width:92%}
+.ttl .t{font-family:'Aref Ruqaa',serif;font-weight:700;font-size:clamp(1.9rem,6.4vw,2.8rem);line-height:1.2;color:#fff3e0;
+  text-shadow:0 2px 0 rgba(60,25,10,.55),0 4px 22px rgba(0,0,0,.6)}
+.ttl .s{margin-top:.1rem;font-size:clamp(.8rem,3vw,.95rem);color:#f1dfc6;text-shadow:0 1px 10px rgba(0,0,0,.8)}
+
+/* ---- الشريط العلوي ---- */
+.top{position:fixed;top:0;inset-inline:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:max(.7rem,env(safe-area-inset-top)) clamp(.9rem,3vw,1.6rem) .6rem;pointer-events:none}
+.top > *{pointer-events:auto}
+.back,.call{display:inline-flex;align-items:center;gap:.35rem;text-decoration:none;font-weight:500;font-size:.9rem;
+  color:#fff7ec;background:rgba(36,18,10,.5);border:1px solid rgba(241,230,210,.28);border-radius:99px;padding:.45rem .9rem;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.back .chev{font-size:1.2em;line-height:0}
+.call .ph{font-size:.8rem;opacity:.8;direction:ltr;unicode-bidi:isolate}
+@media (max-width:480px){.call .ph{display:none}}
+.mark{position:absolute;left:50%;top:max(.55rem,env(safe-area-inset-top));transform:translateX(-50%);width:clamp(62px,16vw,84px);
+  color:#f3dcc0;filter:drop-shadow(0 1px 6px rgba(0,0,0,.6))}
+.mark svg{display:block;width:100%;height:auto}
+
+/* ---- الأقسام تحت + التالي ---- */
+.rail{position:fixed;bottom:max(.8rem,env(safe-area-inset-bottom));inset-inline-start:clamp(.8rem,3vw,1.6rem);z-index:20;
+  display:flex;gap:.3rem;padding:.3rem;border-radius:99px;background:rgba(36,18,10,.55);border:1px solid rgba(241,230,210,.22);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.rail button{font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:500;color:#f3e6d3;background:none;border:0;cursor:pointer;
+  padding:.5rem .95rem;border-radius:99px;transition:background-color .3s ease,color .3s ease}
+.rail button[aria-current="true"]{background:#f3e6d3;color:#5a2718}
+.next{position:fixed;bottom:max(.8rem,env(safe-area-inset-bottom));inset-inline-end:clamp(.8rem,3vw,1.6rem);z-index:20;
+  display:inline-flex;align-items:center;gap:.6rem;font-family:'Tajawal',sans-serif;font-size:.92rem;font-weight:500;cursor:pointer;
+  color:#fff;background:linear-gradient(180deg,#c15f47,#8f3d2e);border:1px solid rgba(255,225,205,.25);border-radius:99px;
+  padding:.62rem 1.1rem .62rem .8rem;box-shadow:0 14px 30px -12px rgba(0,0,0,.6);transition:transform .25s ease,opacity .3s ease}
+.next:hover{transform:translateY(-2px)}
+.next[disabled]{opacity:.55;cursor:default}
+.next .nx-a{display:inline-grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;background:rgba(255,255,255,.18);font-size:1rem}
+.next[hidden]{display:none}
+.snap .top,.snap .ttl,.snap .rail,.snap .next{display:none}

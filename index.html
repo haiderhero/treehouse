@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>تري هاوس | Tree House</title>
+  <meta name="description" content="تري هاوس — مكانكم الثالث في الحلّة. فطور صباحي، بيتزا إيطالية، تحلية وقهوة مختصّة." />
+  <meta name="theme-color" content="#5e2419" />
+  <!-- مشاركة الرابط (واتساب، إنستغرام): العنوان والوصف والصورة -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="تري هاوس | Tree House" />
+  <meta property="og:description" content="مكانكم الثالث في الحلّة — فطور صباحي، بيتزا إيطالية، تحلية وقهوة مختصّة." />
+  <meta property="og:image" content="https://haiderhero.github.io/treehouse/og.jpg" />
+  <meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://haiderhero.github.io/treehouse/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <!-- نموذج للعرض على الزبون: ما يطلع بنتائج البحث -->
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%23b3543f'/%3E%3Ccircle%20cx='16'%20cy='12.5'%20r='7'%20fill='%23efe7d4'/%3E%3Crect%20x='14.6'%20y='11'%20width='2.8'%20height='13'%20rx='1'%20fill='%23efe7d4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/intro.css" />
+</head>
+<body>
+  <main class="stage" id="stage">
+    <!-- المشهد كله (الحلقات، اللوحة، البيت، الإنارة) يترسم بـ WebGL -->
+    <div class="scene" id="scene">
+    <canvas id="gl" class="gl" aria-hidden="true"></canvas>
+    <!-- صورة احتياطية لو WebGL ما موجود -->
+    <img class="fallback" id="fallback" alt="" aria-hidden="true" />
+    <!-- الشعار: على اللوحة ← يطفو ← ينزل على لافتة المبنى ويصير هو اللافتة المضوية -->
+    <div class="plaque-logo" id="plaqueLogo" aria-hidden="true"></div>
+    </div>
+    <!-- الورق اللي يطير من قلب الشجرة -->
+    <canvas id="burst" class="burst" aria-hidden="true"></canvas>
+
+    <!-- الواجهة بعد الانترو -->
+    <section class="hero" id="hero">
+      <h1 class="sr">تري هاوس — Tree House</h1>
+      <!-- «مكانكم الثالث» تنكتب بالحبر ويا ضوء صغير يمشي ويا القلم -->
+      <p class="hero-tag"><span class="clip"><span class="in">مكانكم الثالث</span></span><i class="nib" aria-hidden="true"></i></p>
+      <!-- فاصل: دائرة حلقات صغيرة ترتسم، ونقطة ضوء تدور حولها -->
+      <div class="hero-rule" aria-hidden="true">
+        <i class="ln"></i>
+        <span class="roundel">
+          <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="20"/><circle cx="22" cy="22" r="14.5"/><circle cx="22" cy="22" r="9.5"/><circle cx="22" cy="22" r="5"/><circle class="core" cx="22" cy="22" r="1.6"/></svg>
+          <i class="orbit"><b></b></i>
+        </span>
+        <i class="ln"></i>
+      </div>
+      <p class="hero-status" id="status"></p>
+      <!-- الزر: حلقات الشجرة الحقيقية جوّاه، لمعة ضوء، وسهم بدائرة -->
+      <button class="enter" id="enter" type="button">
+        <span class="e-halo" aria-hidden="true"></span>
+        <i class="ripple" aria-hidden="true"></i><i class="ripple" aria-hidden="true"></i><i class="ripple" aria-hidden="true"></i><i class="ripple" aria-hidden="true"></i>
+        <span class="e-body">
+          <span class="e-rings" aria-hidden="true"></span>
+          <span class="e-sheen" aria-hidden="true"></span>
+          <span class="e-label">ادخل تري هاوس</span>
+          <span class="e-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg></span>
+        </span>
+      </button>
+    </section>
+
+    <button class="skip" id="skip" type="button">تخطّي</button>
+
+  </main>
+
+  <script src="js/intro.js"></script>
+</body>
+</html>
