@@ -27,8 +27,10 @@
 <body>
   <!-- الغرفة: كاميرا من فوق داخل تري هاوس (الأرض، الطاولات، الأطباق) -->
   <main class="room" id="room"></main>
+  <!-- جاي من الانترو: نفس صورة آخر لحظة بالغطسة، لحد ما اللوحة ترسم أول إطار -->
+  <script>if(document.documentElement.classList.contains("from-intro")){var a=document.createElement("img");a.id="arrive";a.className="arrive";a.alt="";a.src="assets/menu/table-"+(innerWidth/innerHeight<0.9?"tall":"wide")+".jpg";document.body.appendChild(a)}</script>
   <!-- التحميل: حلقات شجرة تدور، تبين بس إذا النت بطيء -->
-  <div class="loading" id="loading" aria-hidden="true"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="20"/><circle cx="22" cy="22" r="14.5"/><circle cx="22" cy="22" r="9.5"/><circle class="core" cx="22" cy="22" r="2"/></svg></div>
+  <div class="loading" id="loading" aria-hidden="true"><i><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="20"/></svg></i><i><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="14.5"/></svg></i><i><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="9.5"/></svg></i><b></b></div>
 
   <div class="ttl" id="ttl"><div class="t"></div><div class="s"></div></div>
 

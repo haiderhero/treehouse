@@ -535,7 +535,8 @@
     // (صورة الغوص مو هنا: يحمّلها loadInside() لما تطلع الواجهة)
     [CFG.next, "css/tables.css", "js/tables-data.js", "js/tables.js",
      R + "table_rect.webp", R + "placemat.webp", R + (tall ? "floor_tall.jpg" : "floor_wide.jpg"), R + "table_round.webp",
-     M + "pizza/pepperoni.webp", M + "pizza/italiano.webp", M + "pizza/veggie.webp"
+     M + "pizza/pepperoni.webp", M + "pizza/italiano.webp", M + "pizza/veggie.webp",
+     M + "pizza/bianca.webp", R + "disc.webp", M + "dolci/cookies.webp", M + "dolci/brownie.webp"
     ].forEach(function (u, i) {
       setTimeout(function () {
         fetch(u, { priority: "low" }).then(function (r) { return r.blob(); }).catch(function () {});
