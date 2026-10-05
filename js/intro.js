@@ -528,6 +528,21 @@
   document.getElementById("enter").addEventListener("click", enter);
   skipBtn.addEventListener("click", skip);
 
+  // المنيو: ملفات أول طاولة تنزل بهدوء وقت ما الانترو يشتغل، فـ«ادخل» يفتحها فوراً حتى بنت التلفون الضعيف
+  function warmMenu() {
+    try { if (navigator.connection && navigator.connection.saveData) return; } catch (e) {}
+    var M = "assets/menu/", R = M + "room/";
+    // (صورة الغوص مو هنا: يحمّلها loadInside() لما تطلع الواجهة)
+    [CFG.next, "css/tables.css", "js/tables-data.js", "js/tables.js",
+     R + "table_rect.webp", R + "placemat.webp", R + (tall ? "floor_tall.jpg" : "floor_wide.jpg"), R + "table_round.webp",
+     M + "pizza/pepperoni.webp", M + "pizza/italiano.webp", M + "pizza/veggie.webp"
+    ].forEach(function (u, i) {
+      setTimeout(function () {
+        fetch(u, { priority: "low" }).then(function (r) { return r.blob(); }).catch(function () {});
+      }, i * 150);
+    });
+  }
+
   /* ---------- التشغيل ---------- */
   status();
   var tall = window.innerWidth / window.innerHeight < 0.9;
@@ -581,6 +596,7 @@
       var bx = burstCv.getContext("2d"); sprites.forEach(function (sp) { bx.drawImage(sp, 0, 0); }); bx.clearRect(0, 0, cw, ch);
       requestAnimationFrame(function () { requestAnimationFrame(function () {
         hero.classList.remove("warm"); stage.classList.add("ready"); t0 = performance.now(); requestAnimationFrame(loop);
+        setTimeout(warmMenu, 1200);
       }); });
     })
     .catch(function (err) {
@@ -589,5 +605,6 @@
       document.getElementById("fallback").src = CFG.fallback;
       signEl.style.display = "none";
       hero.classList.add("on"); skipBtn.classList.add("gone");
+      setTimeout(warmMenu, 600);
     });
 })();

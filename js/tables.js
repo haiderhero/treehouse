@@ -494,6 +494,8 @@
     var m = document.getElementById("mark"); if (r[1]) m.innerHTML = r[1].replace(/<path class="la"[^>]*\/>/, "");
     buildRail();
     buildRoom();
+    var ld = document.getElementById("loading");
+    if (ld) ld.animate([{ opacity: getComputedStyle(ld).opacity }, { opacity: 0 }], { duration: 300, fill: "forwards" }).onfinish = function () { ld.remove(); };
     cur = D.tables[tIndex(qs.get("t") || "pizza")].id;
     setCam(L.cam[cur]);
     var T = D.tables[tIndex(cur)];
