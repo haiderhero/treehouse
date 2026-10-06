@@ -532,8 +532,8 @@
   function warmMenu() {
     try { if (navigator.connection && navigator.connection.saveData) return; } catch (e) {}
     var M = "assets/menu/", R = M + "room/";
-    // (صورة الغوص مو هنا: يحمّلها loadInside() لما تطلع الواجهة)
-    [CFG.next, "css/tables.css", "js/tables-data.js", "js/tables.js",
+    // صورة الغطسة أول وحدة: تنزل بـ fetch حتى المنيو يلگاها بالكاش (اللي ينزل بـ Image بس ما رجع ينقرا منه)
+    [tall ? CFG.inside.tall : CFG.inside.wide, CFG.next, "css/tables.css", "js/tables-data.js", "js/tables.js",
      R + "table_rect.webp", R + "placemat.webp", R + (tall ? "floor_tall.jpg" : "floor_wide.jpg"), R + "table_round.webp",
      M + "pizza/pepperoni.webp", M + "pizza/italiano.webp", M + "pizza/veggie.webp",
      M + "pizza/bianca.webp", R + "disc.webp", M + "dolci/cookies.webp", M + "dolci/brownie.webp"
