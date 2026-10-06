@@ -532,6 +532,8 @@
   function warmMenu() {
     try { if (navigator.connection && navigator.connection.saveData) return; } catch (e) {}
     var M = "assets/menu/", R = M + "room/";
+    // خطوط كتابة المنيو (الانترو ما يستعملها، فالمتصفح ما ينزّلها لحاله)
+    try { document.fonts.load("italic 500 20px 'Cormorant Garamond'", "Pepperoni Italiano Vegetariana Bianca Skillet Cookies Brownies"); } catch (e) {}
     // صورة الغطسة أول وحدة: تنزل بـ fetch حتى المنيو يلگاها بالكاش (اللي ينزل بـ Image بس ما رجع ينقرا منه)
     [tall ? CFG.inside.tall : CFG.inside.wide, CFG.next, "css/tables.css", "js/tables-data.js", "js/tables.js",
      R + "table_rect.webp", R + "placemat.webp", R + (tall ? "floor_tall.jpg" : "floor_wide.jpg"), R + "table_round.webp",

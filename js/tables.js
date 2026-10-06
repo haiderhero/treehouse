@@ -815,8 +815,7 @@
     Promise.all(LEAVES.map(loadImg)),
     fetch("assets/intro/logo.svg").then(function (r) { return r.text(); }).catch(function () { return ""; }),
     Promise.all([R + "table_rect.webp", R + "table_round.webp", R + "placemat.webp", R + L.floor.src].map(loadImg)),
-    Promise.all(D.tables[0].items.slice(0, 3).map(function (it) { return loadImg(it.img); })),
-    Promise.race([fontsP, timeout])
+    Promise.all(D.tables[0].items.slice(0, 3).map(function (it) { return loadImg(it.img); }))
   ]).then(function (r) {
     var m = document.getElementById("mark"); if (r[1]) m.innerHTML = r[1].replace(/<path class="la"[^>]*\/>/, "");
     D.tables.forEach(function (t) { t.items.forEach(function (it) { it.tbl = t.id; }); });
@@ -841,7 +840,11 @@
       else need(D.tables[tIndex("dolci")].items).then(function () { serveDolci(300); if (FROZEN) { advance(clk.cur + FREEZE); render(); } });
     };
     // أول إطار يطلع للشاشة قبل ما نبدي نحضّر الكتابة والحركات
-    if (FROZEN) go(); else requestAnimationFrame(function () { requestAnimationFrame(go); });
+    var fontsReady = Promise.race([fontsP, timeout]);
+    if (FROZEN) return fontsReady.then(function () { go(); afterGo(); });
+    fontsReady.then(function () { requestAnimationFrame(function () { requestAnimationFrame(function () { go(); afterGo(); }); }); });
+  });
+  function afterGo() {
     // جهّز الباقي بهدوء: ينزل من هسه، ويتحضّر قطعة قطعة لما ماكو حركة كبيرة (بترتيب الحاجة: البيتزا الجاية، الحلويات)
     var rest = []; D.tables.forEach(function (t) { rest = rest.concat(t.items); });
     rest = rest.filter(function (it) { return D.tables[0].items.slice(0, 3).indexOf(it) < 0; });
@@ -862,5 +865,5 @@
         } else need(pages(D.tables[tIndex("pizza")])[1] || []).then(function () { clk.cur = t0; nextPizzaPage().then(function () { setTimeout(then, 50); }); });
       } else if (cur === "pizza") { advance(clk.cur + FREEZE); render(); }
     }
-  });
+  }
 })();
