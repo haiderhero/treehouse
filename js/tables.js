@@ -388,7 +388,10 @@
     clearTimeout(idleT);
     if (!IDLE.length) return;
     idleT = setTimeout(function () {
-      if (!TW.some(function (w) { return !w.loop; })) IDLE.shift()();
+      if (!TW.some(function (w) { return !w.loop; })) {
+        var t0 = performance.now(), job = IDLE.shift(); job();
+        if (window.__th) window.__th.jobs.push((job.name || "job") + ":" + (performance.now() - t0).toFixed(0));
+      }
       tickIdle();
     }, 120);
   }
@@ -793,7 +796,7 @@
   }
 
   // فحص: ‎?debug‎ يطلّع حجم الصور على كرت الشاشة (MB) وعددها
-  if (qs.has("debug")) window.__th = { mem: function () { var b = 0; TEX.forEach(function (t) { b += t.W * t.H * 4; }); return { mb: +(b / 1048576).toFixed(1), n: TEX.length, gl: !!gl }; } };
+  if (qs.has("debug")) window.__th = { jobs: [], mem: function () { var b = 0; TEX.forEach(function (t) { b += t.W * t.H * 4; }); return { mb: +(b / 1048576).toFixed(1), n: TEX.length, gl: !!gl }; } };
 
   /* ---------- التشغيل ---------- */
   var ready = false;
